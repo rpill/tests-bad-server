@@ -1,0 +1,9 @@
+/node_modules/
+*.log
+dist
+tmp
+npm-cache
+playwright/.auth
+data/bimage.png
+data/mimage.png
+test-results

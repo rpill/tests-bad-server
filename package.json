@@ -1,0 +1,21 @@
+{
+  "name": "tests-bad-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.47.2",
+    "@types/node": "^22.7.0",
+    "playwright": "^1.47.2"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.5"
+  }
+}
