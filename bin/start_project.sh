@@ -8,5 +8,5 @@ sed -i~ '/^VITE_API_ORIGIN=/s/=.*/=http:\/\/localhost\/api/' $GITHUB_WORKSPACE/b
 cd $GITHUB_WORKSPACE
 docker compose up -d
 
-docker exec -i $REPO-mongo-1 sh -c "mongoimport -u root -p example --drop -c users --jsonArray --uri=mongodb://localhost/weblarek?authSource=admin" < .dump/weblarek.users.json
-docker exec -i $REPO-mongo-1 sh -c "mongoimport -u root -p example --drop -c products --jsonArray --uri=mongodb://localhost/weblarek?authSource=admin" < .dump/weblarek.products.json
+docker exec -i $REPO-mongo-1 sh -c "mongoimport --authenticationDatabase admin --authenticationMechanism SCRAM-SHA-1 -u root -p example --drop -c users --jsonArray --uri=mongodb://localhost/weblarek?authSource=admin" < .dump/weblarek.users.json
+docker exec -i $REPO-mongo-1 sh -c "mongoimport --authenticationDatabase admin --authenticationMechanism SCRAM-SHA-1 -u root -p example --drop -c products --jsonArray --uri=mongodb://localhost/weblarek?authSource=admin" < .dump/weblarek.products.json
