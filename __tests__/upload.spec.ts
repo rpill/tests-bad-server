@@ -3,7 +3,7 @@ import path from 'path';
 import { test, expect } from '@playwright/test';
 
 test('Нельзя использовать оригинальное имя файл при формировании пути', async ({ request }) => {
-  const imagePath = 'data/mimage.png';
+  const imagePath = path.join(process.cwd(), 'data/mimage.png');
   const image = fs.readFileSync(imagePath);
 
   const response = await request.post(`${process.env.API_URL}/upload`, {
@@ -25,7 +25,7 @@ test('Нельзя использовать оригинальное имя фа
 });
 
 test('Размер файлов должен быть лимитирован по минимуму (больше 2kb)', async ({ request }) => {
-  const imagePath = 'data/simage.png';
+  const imagePath = path.join(process.cwd(), 'data/simage.png');
   const image = fs.readFileSync(imagePath);
 
   const response = await request.post(`${process.env.API_URL}/upload`, {
@@ -45,7 +45,7 @@ test('Размер файлов должен быть лимитирован п�
 });
 
 test('Размер файлов должен быть лимитирован по максимуму (меньше 10mb)', async ({ request }) => {
-  const imagePath = 'data/bimage.png';
+  const imagePath = path.join(process.cwd(), 'data/bimage.png');
   const image = fs.readFileSync(imagePath);
 
   const response = await request.post(`${process.env.API_URL}/upload`, {
