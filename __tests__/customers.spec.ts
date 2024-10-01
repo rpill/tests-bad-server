@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+test.afterEach(async () => {
+  await new Promise(res => setTimeout(res, 2000));
+});
+
 test('Нормализован лимит', async ({ request }) => {
   const response = await request.get(`${process.env.API_URL}/customers?limit=1000`, {
     headers: {

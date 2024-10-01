@@ -2,6 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { test, expect } from '@playwright/test';
 
+test.afterEach(async () => {
+  await new Promise(res => setTimeout(res, 2000));
+});
+
 test('Нельзя использовать оригинальное имя файл при формировании пути', async ({ request }) => {
   const imagePath = path.join(process.cwd(), 'data/mimage.png');
   const image = fs.readFileSync(imagePath);

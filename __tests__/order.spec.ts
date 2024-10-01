@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 
+test.afterEach(async () => {
+  await new Promise(res => setTimeout(res, 2000));
+});
+
 test('Нормализован лимит', async ({ request }) => {
   const response = await request.get(`${process.env.API_URL}/orders/all?page=2&limit=1000`, {
     headers: {
@@ -56,8 +60,7 @@ test('Уязвимость телефона', async ({ request }) => {
     }
   });
 
-  expect(response.ok()).toBeFalsy();
-  // expect(response.status()).toEqual(400);
+  expect(response.status()).toEqual(400);
 });
 
 test('Проверка роли (у пользователя отсутствует доступ к базе всех заказов)', async ({ request }) => {

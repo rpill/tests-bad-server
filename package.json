@@ -16,6 +16,7 @@
     "playwright": "^1.47.2"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "shelljs": "^0.8.5"
   }
 }
