@@ -11,6 +11,7 @@ export default defineConfig({
     { name: 'setup', testMatch: /global\.setup\.ts/ },
     {
       name: 'api',
+      testMatch: /tests\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
       },

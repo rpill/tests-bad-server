@@ -6,7 +6,7 @@ process.env.API_URL = API_URL;
 const authAdminFile = 'playwright/.auth/admin.json';
 const [admin, user] = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
 
-setup('authenticate as admin', async ({ request }) => {
+setup('Авторизация, как админ', async ({ request }) => {
   const response = await request.post(`${API_URL}/auth/login`, {
     data: {
       email: admin.email,
@@ -21,7 +21,7 @@ setup('authenticate as admin', async ({ request }) => {
 
 const authUserFile = 'playwright/.auth/user.json';
 
-setup('authenticate as user', async ({ request }) => {
+setup('Авторизация, как пользователь', async ({ request }) => {
   const response = await request.post(`${API_URL}/auth/login`, {
     data: {
       email: user.email,
