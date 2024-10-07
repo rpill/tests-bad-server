@@ -6,7 +6,6 @@ import shell from 'shelljs';
 test.describe('Проверка на уязвимость пакетов', () => {
   test('Аудит backend пакетов', () => {
     const result = shell.exec('npm audit', { cwd: `${process.env.GITHUB_WORKSPACE}/backend`, silent: true });
-
     expect(result.code).toEqual(0);
   });
 
@@ -19,7 +18,7 @@ test.describe('Проверка на уязвимость пакетов', () =>
 
 test.describe('Проверка заказов', () => {
   test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise(res => setTimeout(res, 3000));
   });
 
   test('Нормализован лимит', async ({ request }) => {
@@ -95,7 +94,7 @@ test.describe('Проверка заказов', () => {
 
 test.describe('Проверка пользователей', () => {
   test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise(res => setTimeout(res, 3000));
   });
 
   test('Нормализован лимит', async ({ request }) => {
@@ -106,11 +105,11 @@ test.describe('Проверка пользователей', () => {
     });
     const data = await response.json();
     expect(response.ok()).toBeTruthy();
-    expect(data.pagination.pageSize).toBeLessThan(1000);
+    expect(data.pagination.pageSize).toBeLessThanOrEqual(10);
   });
 
   test('Экранирование при поиске', async ({ request }) => {
-    const response = await request.get(`${process.env.API_URL}/customers?search=1+1[]`, {
+    const response = await request.get(`${process.env.API_URL}/customers?search=1+{}$()`, {
       headers: {
         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
       }
@@ -132,7 +131,7 @@ test.describe('Проверка пользователей', () => {
 
 test.describe('Проверка загрузки файлов', () => {
   test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise(res => setTimeout(res, 3000));
   });
 
   test('Нельзя использовать оригинальное имя файл при формировании пути', async ({ request }) => {
@@ -146,13 +145,12 @@ test.describe('Проверка загрузки файлов', () => {
       multipart: {
         file: {
           name: imagePath,
-          mimeType: 'image/jpeg',
+          mimeType: 'image/png',
           buffer: image
         }
       }
     });
     const data = await response.json();
-    console.log(data)
     expect(path.basename(data.fileName)).not.toEqual(path.basename(imagePath));
     expect(response.ok()).toBeTruthy();
   });
@@ -168,7 +166,7 @@ test.describe('Проверка загрузки файлов', () => {
       multipart: {
         file: {
           name: imagePath,
-          mimeType: 'image/jpeg',
+          mimeType: 'image/png',
           buffer: image
         }
       }
@@ -188,7 +186,7 @@ test.describe('Проверка загрузки файлов', () => {
       multipart: {
         file: {
           name: imagePath,
-          mimeType: 'image/jpeg',
+          mimeType: 'image/png',
           buffer: image
         }
       }
@@ -205,7 +203,7 @@ test.describe('Проверка загрузки файлов', () => {
       multipart: {
         file: {
           name: 'image.png',
-          mimeType: 'image/jpeg',
+          mimeType: 'image/png',
           buffer: Buffer.alloc(1024 * 1024 * 5)
         }
       }
@@ -217,7 +215,7 @@ test.describe('Проверка загрузки файлов', () => {
 
 test.describe('Общие проверки', () => {
   test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise(res => setTimeout(res, 3000));
   });
 
   test('cors() содержит параметры и не пустой', async ({ request }) => {
@@ -248,7 +246,7 @@ test.describe('Общие проверки', () => {
     // expect(response.status()).toEqual(413);
   });
 
-  test.afterAll('Отсутствует рейт-лимитер', async ({ request }) => {
+  test('Установлен рейт-лимит', async ({ request }) => {
     const promises: Promise<any>[] = [];
     for (let i = 0; i < 50; i++) {
       promises.push(request.get(`${process.env.API_URL}/customers`, {
@@ -259,6 +257,6 @@ test.describe('Общие проверки', () => {
     }
     const responses = await Promise.all(promises)
     // console.log(responses.map(response => response.status()))
-    expect(responses.every((response) => response.status() === 200)).toBeTruthy();
+    expect(responses.every((response) => response.status() === 200)).toBeFalsy();
   });
 });
