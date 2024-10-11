@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+  reporter: 'list',
   workers: 1,
   testDir: './__tests__',
   outputDir: './tmp/artifacts',
