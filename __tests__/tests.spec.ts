@@ -151,7 +151,9 @@ test.describe('Проверка загрузки файлов', () => {
       }
     });
     const data = await response.json();
-    expect(path.basename(data.fileName)).not.toEqual(path.basename(imagePath));
+    const uploadedFileName = path.basename(data.fileName ?? '');
+    const localFileName = path.basename(imagePath);
+    expect(uploadedFileName).not.toEqual(localFileName);
     expect(response.ok()).toBeTruthy();
   });
 

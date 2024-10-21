@@ -10,4 +10,6 @@ curl -o $DIR_TESTS/data/mimage.png https://getsamplefiles.com/download/png/sampl
 
 echo "ЗАПУСК ТЕСТОВ"
 cd $DIR_TESTS || exit
+node ./prepare.js
+sh set_role.sh
 npm run test
