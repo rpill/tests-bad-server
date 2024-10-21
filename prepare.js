@@ -1,10 +1,9 @@
 import fs from 'fs';
-import { acquireAccount } from './src/utils.js';
+import { acquireAccount, delay } from './src/utils.js';
 
 (async () => {
   const [admin, user] = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
-  await Promise.all([
-    acquireAccount(admin.email, admin.password),
-    acquireAccount(user.email, user.password),
-  ]);
+  await acquireAccount(admin.email, admin.password)
+  await delay(3000)
+  await acquireAccount(user.email, user.password)
 })();
