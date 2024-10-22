@@ -13,3 +13,7 @@ cd $DIR_TESTS || exit
 node ./prepare.js
 sh ./bin/set_role.sh
 npm run test
+
+echo "СОХРАНЕНИЕ ЛОГОВ"
+mkdir -p /tmp/output
+docker logs $REPO-backend-1 > output/backend.log
