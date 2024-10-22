@@ -15,5 +15,5 @@ sh ./bin/set_role.sh
 npm run test
 
 echo "СОХРАНЕНИЕ ЛОГОВ"
-mkdir -p /tmp/output
+mkdir -p output
 docker logs $REPO-backend-1 > output/backend.log
