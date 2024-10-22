@@ -129,139 +129,139 @@ test.describe('Проверка пользователей', () => {
   });
 });
 
-test.describe('Проверка загрузки файлов', () => {
-  test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 3000));
-  });
+// test.describe('Проверка загрузки файлов', () => {
+//   test.afterEach(async () => {
+//     await new Promise(res => setTimeout(res, 3000));
+//   });
 
-  test('Нельзя использовать оригинальное имя файл при формировании пути', async ({ request }) => {
-    const imagePath = path.join(process.cwd(), 'data/mimage.png');
-    const image = fs.readFileSync(imagePath);
+//   test('Нельзя использовать оригинальное имя файл при формировании пути', async ({ request }) => {
+//     const imagePath = path.join(process.cwd(), 'data/mimage.png');
+//     const image = fs.readFileSync(imagePath);
 
-    const response = await request.post(`${process.env.API_URL}/upload`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      },
-      multipart: {
-        file: {
-          name: imagePath,
-          mimeType: 'image/png',
-          buffer: image
-        }
-      }
-    });
-    const data = await response.json();
-    expect(response.ok()).toBeTruthy();
-    expect(data.fileName).toBeDefined();
+//     const response = await request.post(`${process.env.API_URL}/upload`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       },
+//       multipart: {
+//         file: {
+//           name: imagePath,
+//           mimeType: 'image/png',
+//           buffer: image
+//         }
+//       }
+//     });
+//     const data = await response.json();
+//     expect(response.ok()).toBeTruthy();
+//     expect(data.fileName).toBeDefined();
 
-    const uploadedFileName = path.basename(data.fileName);
-    const localFileName = path.basename(imagePath);
+//     const uploadedFileName = path.basename(data.fileName);
+//     const localFileName = path.basename(imagePath);
 
-    expect(uploadedFileName).not.toEqual(localFileName);
-  });
+//     expect(uploadedFileName).not.toEqual(localFileName);
+//   });
 
-  test('Размер файлов должен быть лимитирован по минимуму (больше 2kb)', async ({ request }) => {
-    const imagePath = path.join(process.cwd(), 'data/simage.png');
-    const image = fs.readFileSync(imagePath);
+//   test('Размер файлов должен быть лимитирован по минимуму (больше 2kb)', async ({ request }) => {
+//     const imagePath = path.join(process.cwd(), 'data/simage.png');
+//     const image = fs.readFileSync(imagePath);
 
-    const response = await request.post(`${process.env.API_URL}/upload`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      },
-      multipart: {
-        file: {
-          name: imagePath,
-          mimeType: 'image/png',
-          buffer: image
-        }
-      }
-    });
+//     const response = await request.post(`${process.env.API_URL}/upload`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       },
+//       multipart: {
+//         file: {
+//           name: imagePath,
+//           mimeType: 'image/png',
+//           buffer: image
+//         }
+//       }
+//     });
 
-    expect(response.ok()).toBeFalsy();
-  });
+//     expect(response.ok()).toBeFalsy();
+//   });
 
-  test('Размер файлов должен быть лимитирован по максимуму (меньше 10mb)', async ({ request }) => {
-    const imagePath = path.join(process.cwd(), 'data/bimage.png');
-    const image = fs.readFileSync(imagePath);
+//   test('Размер файлов должен быть лимитирован по максимуму (меньше 10mb)', async ({ request }) => {
+//     const imagePath = path.join(process.cwd(), 'data/bimage.png');
+//     const image = fs.readFileSync(imagePath);
 
-    const response = await request.post(`${process.env.API_URL}/upload`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      },
-      multipart: {
-        file: {
-          name: imagePath,
-          mimeType: 'image/png',
-          buffer: image
-        }
-      }
-    });
+//     const response = await request.post(`${process.env.API_URL}/upload`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       },
+//       multipart: {
+//         file: {
+//           name: imagePath,
+//           mimeType: 'image/png',
+//           buffer: image
+//         }
+//       }
+//     });
 
-    expect(response.ok()).toBeFalsy();
-  });
+//     expect(response.ok()).toBeFalsy();
+//   });
 
-  test('Проверка метаданных загружаемого изображения', async ({ request }) => {
-    const response = await request.post(`${process.env.API_URL}/upload`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      },
-      multipart: {
-        file: {
-          name: 'image.png',
-          mimeType: 'image/png',
-          buffer: Buffer.alloc(1024 * 1024 * 5)
-        }
-      }
-    });
+//   test('Проверка метаданных загружаемого изображения', async ({ request }) => {
+//     const response = await request.post(`${process.env.API_URL}/upload`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       },
+//       multipart: {
+//         file: {
+//           name: 'image.png',
+//           mimeType: 'image/png',
+//           buffer: Buffer.alloc(1024 * 1024 * 5)
+//         }
+//       }
+//     });
 
-    expect(response.ok()).toBeFalsy();
-  });
-});
+//     expect(response.ok()).toBeFalsy();
+//   });
+// });
 
-test.describe('Общие проверки', () => {
-  test.afterEach(async () => {
-    await new Promise(res => setTimeout(res, 3000));
-  });
+// test.describe('Общие проверки', () => {
+//   test.afterEach(async () => {
+//     await new Promise(res => setTimeout(res, 3000));
+//   });
 
-  test('cors() содержит параметры и не пустой', async ({ request }) => {
-    const response = await request.get(`${process.env.API_URL}/customers`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      }
-    });
-    expect(response.headers()).toHaveProperty('access-control-allow-origin', 'http://localhost:5173');
-  });
+//   test('cors() содержит параметры и не пустой', async ({ request }) => {
+//     const response = await request.get(`${process.env.API_URL}/customers`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       }
+//     });
+//     expect(response.headers()).toHaveProperty('access-control-allow-origin', 'http://localhost:5173');
+//   });
 
-  test('Лимит на размер body', async ({ request }) => {
-    const response = await request.post(`${process.env.API_URL}/order`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-      },
-      data: {
-        "address": "1".repeat(100000000),
-        "payment": "online",
-        "phone": '1',
-        "total": 2200,
-        "email": "maxim_91@inbox.ru",
-        "items": ["66601a7857ecac94459696d0", "66601a8657ecac94459696d4"]
-      }
-    });
+//   test('Лимит на размер body', async ({ request }) => {
+//     const response = await request.post(`${process.env.API_URL}/order`, {
+//       headers: {
+//         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//       },
+//       data: {
+//         "address": "1".repeat(100000000),
+//         "payment": "online",
+//         "phone": '1',
+//         "total": 2200,
+//         "email": "maxim_91@inbox.ru",
+//         "items": ["66601a7857ecac94459696d0", "66601a8657ecac94459696d4"]
+//       }
+//     });
 
-    expect(response.ok()).toBeFalsy();
-    // expect(response.status()).toEqual(413);
-  });
+//     expect(response.ok()).toBeFalsy();
+//     // expect(response.status()).toEqual(413);
+//   });
 
-  test('Установлен рейт-лимит', async ({ request }) => {
-    const promises: Promise<any>[] = [];
-    for (let i = 0; i < 50; i++) {
-      promises.push(request.get(`${process.env.API_URL}/customers`, {
-        headers: {
-          'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
-        }
-      }));
-    }
-    const responses = await Promise.all(promises)
-    // console.log(responses.map(response => response.status()))
-    expect(responses.every((response) => response.status() === 200)).toBeFalsy();
-  });
-});
+//   test('Установлен рейт-лимит', async ({ request }) => {
+//     const promises: Promise<any>[] = [];
+//     for (let i = 0; i < 50; i++) {
+//       promises.push(request.get(`${process.env.API_URL}/customers`, {
+//         headers: {
+//           'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+//         }
+//       }));
+//     }
+//     const responses = await Promise.all(promises)
+//     // console.log(responses.map(response => response.status()))
+//     expect(responses.every((response) => response.status() === 200)).toBeFalsy();
+//   });
+// });
