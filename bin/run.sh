@@ -11,6 +11,7 @@ curl -o $DIR_TESTS/data/mimage.png https://getsamplefiles.com/download/png/sampl
 echo "ЗАПИСЬ ЛОГОВ"
 mkdir -p $DIR_TESTS/output
 docker logs -f $REPO-backend-1 > $DIR_TESTS/output/backend.log &
+docker logs -f $REPO-server-1 > $DIR_TESTS/output/server.log &
 
 echo "ЗАПУСК ТЕСТОВ"
 cd $DIR_TESTS || exit
