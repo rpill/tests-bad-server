@@ -1,24 +1,28 @@
 import fs from 'fs';
-import { test as setup } from '@playwright/test';
+import { APIRequestContext, test as setup } from '@playwright/test';
 
 const API_URL = 'http://localhost/api';
 process.env.API_URL = API_URL;
 const authAdminFile = 'playwright/.auth/admin.json';
 const [admin, user] = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
 
-async function getCsrfToken(request: any): Promise<string> {
-  const response = await request.get(`${API_URL}/auth/csrf-token`);
-  if (response.status() !== 200) {
-    throw new Error(`Не удалось получить CSRF токен: ${response.status()}`);
+const getCsrfToken = async (request: APIRequestContext) => {
+  const csrfResponse = await request.get(`${API_URL}/auth/csrf-token`);
+  if (csrfResponse.status() !== 200) {
+    throw new Error(`Получение CSRF токена не удалось: ${csrfResponse.status()} ${csrfResponse.statusText()}`);
   }
-  const data = await response.json();
-  return data.csrfToken;
-}
+
+  const { csrfToken } = await csrfResponse.json();
+  if (!csrfToken) {
+    throw new Error('CSRF токен отсутствует в ответе /auth/csrf-token');
+  }
+
+  return csrfToken;
+};
 
 setup('Авторизация, как админ', async ({ request }) => {
   try {
     const csrfToken = await getCsrfToken(request);
-
     const response = await request.post(`${API_URL}/auth/login`, {
       headers: {
         'X-CSRF-Token': csrfToken,
@@ -47,7 +51,6 @@ const authUserFile = 'playwright/.auth/user.json';
 setup('Авторизация, как пользователь', async ({ request }) => {
   try {
     const csrfToken = await getCsrfToken(request);
-
     const response = await request.post(`${API_URL}/auth/login`, {
       headers: {
         'X-CSRF-Token': csrfToken,
