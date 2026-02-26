@@ -3,6 +3,12 @@ import path from 'path';
 import { test, expect } from '@playwright/test';
 import shell from 'shelljs';
 
+async function getCsrfToken(request: any): Promise<string> {
+  const response = await request.get(`${process.env.API_URL}/auth/csrf-token`);
+  const data = await response.json();
+  return data.csrfToken;
+}
+
 test.describe('Проверка на уязвимость пакетов', () => {
   test('Аудит backend пакетов', () => {
     const result = shell.exec('npm audit', { cwd: `${process.env.GITHUB_WORKSPACE}/backend`, silent: true });
@@ -42,9 +48,12 @@ test.describe('Проверка заказов', () => {
   });
 
   test('Санитизирован комментарий', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
+
     const response = await request.post(`${process.env.API_URL}/order`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       },
       data: {
         "payment": "online",
@@ -63,9 +72,12 @@ test.describe('Проверка заказов', () => {
   });
 
   test('Уязвимость телефона', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
+
     const response = await request.post(`${process.env.API_URL}/order`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       },
       data: {
         "address": "Васильевская 86",
@@ -233,9 +245,12 @@ test.describe('Общие проверки', () => {
   });
 
   test('Лимит на размер body', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
+
     const response = await request.post(`${process.env.API_URL}/order`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       },
       data: {
         "address": "1".repeat(100000000),
