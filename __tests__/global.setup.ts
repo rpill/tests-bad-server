@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { APIRequestContext, test as setup } from '@playwright/test';
+import { test as setup } from '@playwright/test';
+import type { APIRequestContext } from '@playwright/test';
 
 const API_URL = 'http://localhost/api';
 process.env.API_URL = API_URL;
