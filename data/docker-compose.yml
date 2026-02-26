@@ -14,7 +14,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - db:/data/db
     networks:
@@ -26,7 +26,7 @@ services:
       context: backend
     environment:
       PORT: 3000
-      DB_ADDRESS: mongodb://root:example@mongo:27017/weblarek?authSource=admin
+      DB_ADDRESS: mongodb://root:example@mongo:27018/weblarek?authSource=admin
       UPLOAD_PATH: images
       UPLOAD_PATH_TEMP: temp
       ORIGIN_ALLOW: http://localhost:5173
