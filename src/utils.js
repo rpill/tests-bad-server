@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://localhost/api';
 
 const getCsrfSession = async () => {
   const response = await fetch(`${API_URL}/auth/csrf-token`, {
