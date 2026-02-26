@@ -7,7 +7,7 @@ const authAdminFile = 'playwright/.auth/admin.json';
 const [admin, user] = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
 
 async function getCsrfToken(request: any): Promise<string> {
-  const response = await request.get(`${API_URL}/auth/csrf-token`);
+  const response = await request.get(`${API_URL}/auth/token`);
   if (response.status() !== 200) {
     throw new Error(`Не удалось получить CSRF токен: ${response.status()}`);
   }

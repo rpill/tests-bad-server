@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 import shell from 'shelljs';
 
 async function getCsrfToken(request: any): Promise<string> {
-  const response = await request.get(`${process.env.API_URL}/auth/csrf-token`);
+  const response = await request.get(`${process.env.API_URL}/auth/token`);
   const data = await response.json();
   return data.csrfToken;
 }
