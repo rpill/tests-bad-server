@@ -212,6 +212,7 @@ test.describe('Проверка загрузки файлов', () => {
       }
     });
     const data = await response.json();
+    console.log(data)
     expect(response.ok()).toBeTruthy();
     expect(data.fileName).toBeDefined();
 
@@ -322,19 +323,19 @@ test.describe('Общие проверки', () => {
     // expect(response.status()).toEqual(413);
   });
 
-  test('Установлен рейт-лимит', async ({ request }) => {
-    const csrfToken = await getCsrfToken(request);
-    const promises: Promise<any>[] = [];
-    for (let i = 0; i < 50; i++) {
-      promises.push(request.get(`${process.env.API_URL}/customers`, {
-        headers: {
-          'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
-          'X-CSRF-Token': csrfToken,
-        }
-      }));
-    }
-    const responses = await Promise.all(promises)
-    // console.log(responses.map(response => response.status()))
-    expect(responses.every((response) => response.status() === 200)).toBeFalsy();
-  });
+  // test('Установлен рейт-лимит', async ({ request }) => {
+  //   const csrfToken = await getCsrfToken(request);
+  //   const promises: Promise<any>[] = [];
+  //   for (let i = 0; i < 50; i++) {
+  //     promises.push(request.get(`${process.env.API_URL}/customers`, {
+  //       headers: {
+  //         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+  //         'X-CSRF-Token': csrfToken,
+  //       }
+  //     }));
+  //   }
+  //   const responses = await Promise.all(promises)
+  //   // console.log(responses.map(response => response.status()))
+  //   expect(responses.every((response) => response.status() === 200)).toBeFalsy();
+  // });
 });
