@@ -37,9 +37,11 @@ test.describe('Проверка заказов', () => {
   });
 
   test('Нормализован лимит', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
     const response = await request.get(`${process.env.API_URL}/order/all?page=2&limit=1000`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       }
     });
     const data = await response.json();
@@ -48,9 +50,11 @@ test.describe('Проверка заказов', () => {
   });
 
   test('При избыточной аггрегации, уязвимой к инъекции должна быть ошибка', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
     const response = await request.get(`${process.env.API_URL}/order/all?status[$expr][$function][body]='function%20(status)%20%7B%20return%20status%20%3D%3D%3D%20%22completed%22%20%7D'&status[$expr][$function][lang]=js&status[$expr][$function][args][0]=%24status`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       }
     });
     expect(response.ok()).toBeFalsy();
@@ -117,9 +121,11 @@ test.describe('Проверка пользователей', () => {
   });
 
   test('Нормализован лимит', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
     const response = await request.get(`${process.env.API_URL}/customers?limit=1000`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       }
     });
     const data = await response.json();
@@ -128,9 +134,11 @@ test.describe('Проверка пользователей', () => {
   });
 
   test('Экранирование при поиске', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
     const response = await request.get(`${process.env.API_URL}/customers?search=1+{}$()`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       }
     });
     expect(response.ok()).toBeTruthy();
@@ -248,9 +256,11 @@ test.describe('Общие проверки', () => {
   });
 
   test('cors() содержит параметры и не пустой', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
     const response = await request.get(`${process.env.API_URL}/customers`, {
       headers: {
-        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+        'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+        'X-CSRF-Token': csrfToken,
       }
     });
     expect(response.headers()).toHaveProperty('access-control-allow-origin', 'http://localhost:5173');
@@ -278,11 +288,13 @@ test.describe('Общие проверки', () => {
   });
 
   // test('Установлен рейт-лимит', async ({ request }) => {
+  //   const csrfToken = await getCsrfToken(request);
   //   const promises: Promise<any>[] = [];
   //   for (let i = 0; i < 50; i++) {
   //     promises.push(request.get(`${process.env.API_URL}/customers`, {
   //       headers: {
-  //         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`
+  //         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+  //         'X-CSRF-Token': csrfToken,
   //       }
   //     }));
   //   }
