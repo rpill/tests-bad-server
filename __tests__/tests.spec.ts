@@ -182,17 +182,6 @@ test.describe('Проверка загрузки файлов', () => {
     await new Promise(res => setTimeout(res, 3000));
   });
 
-  // test('Каталог для временных загрузок не должен отсутствовать', async () => {
-  //   const workspace = process.env.GITHUB_WORKSPACE || path.resolve(process.cwd(), '..');
-  //   const tempDir = path.join(
-  //     workspace,
-  //     'backend/src/public',
-  //     process.env.UPLOAD_PATH_TEMP || 'temp',
-  //   );
-
-  //   expect(fs.existsSync(tempDir)).toBeTruthy();
-  // });
-
   test('Нельзя использовать оригинальное имя файла при формировании пути', async ({ request }) => {
     const imagePath = path.join(process.cwd(), 'data/mimage.png');
     const image = fs.readFileSync(imagePath);
@@ -212,7 +201,6 @@ test.describe('Проверка загрузки файлов', () => {
       }
     });
     const data = await response.json();
-    console.log(data)
     expect(response.ok()).toBeTruthy();
     expect(data.fileName).toBeDefined();
 
@@ -283,6 +271,20 @@ test.describe('Проверка загрузки файлов', () => {
     });
 
     expect(response.ok()).toBeFalsy();
+  });
+
+  test('Каталог для временных загрузок не должен отсутствовать', async () => {
+    const workspace = process.env.GITHUB_WORKSPACE || path.resolve(process.cwd(), '..');
+    const tempDir = path.join(
+      workspace,
+      'backend/src/public',
+      process.env.UPLOAD_PATH_TEMP || 'temp',
+    );
+    console.log('🔍 GITHUB_WORKSPACE:', process.env.GITHUB_WORKSPACE);
+    console.log('🔍 process.cwd():', process.cwd());
+    console.log('🔍 Итоговый путь:', tempDir);
+    console.log('🔍 Существует?:', fs.existsSync(tempDir));
+    expect(fs.existsSync(tempDir)).toBeTruthy();
   });
 });
 
