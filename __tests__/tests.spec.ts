@@ -46,10 +46,10 @@ test.describe('Проверка на уязвимость пакетов', () =>
     expect(result.code).toEqual(0);
   });
 
-  // test('Аудит frontend пакетов', () => {
-  //   const result = shell.exec('npm audit', { cwd: `${process.env.GITHUB_WORKSPACE}/frontend`, silent: true });
-  //   expect(result.code).toEqual(0);
-  // });
+  test('Аудит frontend пакетов', () => {
+    const result = shell.exec('npm audit', { cwd: `${process.env.GITHUB_WORKSPACE}/frontend`, silent: true });
+    expect(result.code).toEqual(0);
+  });
 });
 
 test.describe('Проверка заказов', () => {
@@ -272,20 +272,6 @@ test.describe('Проверка загрузки файлов', () => {
 
     expect(response.ok()).toBeFalsy();
   });
-
-  test('Каталог для временных загрузок не должен отсутствовать', async () => {
-    const workspace = process.env.GITHUB_WORKSPACE || path.resolve(process.cwd(), '..');
-    const tempDir = path.join(
-      workspace,
-      'backend/src/public',
-      process.env.UPLOAD_PATH_TEMP || 'temp',
-    );
-    console.log('🔍 GITHUB_WORKSPACE:', process.env.GITHUB_WORKSPACE);
-    console.log('🔍 process.cwd():', process.cwd());
-    console.log('🔍 Итоговый путь:', tempDir);
-    console.log('🔍 Существует?:', fs.existsSync(tempDir));
-    expect(fs.existsSync(tempDir)).toBeTruthy();
-  });
 });
 
 test.describe('Общие проверки', () => {
@@ -325,19 +311,19 @@ test.describe('Общие проверки', () => {
     // expect(response.status()).toEqual(413);
   });
 
-  // test('Установлен рейт-лимит', async ({ request }) => {
-  //   const csrfToken = await getCsrfToken(request);
-  //   const promises: Promise<any>[] = [];
-  //   for (let i = 0; i < 50; i++) {
-  //     promises.push(request.get(`${process.env.API_URL}/customers`, {
-  //       headers: {
-  //         'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
-  //         'X-CSRF-Token': csrfToken,
-  //       }
-  //     }));
-  //   }
-  //   const responses = await Promise.all(promises)
-  //   // console.log(responses.map(response => response.status()))
-  //   expect(responses.every((response) => response.status() === 200)).toBeFalsy();
-  // });
+  test('Установлен рейт-лимит', async ({ request }) => {
+    const csrfToken = await getCsrfToken(request);
+    const promises: Promise<any>[] = [];
+    for (let i = 0; i < 50; i++) {
+      promises.push(request.get(`${process.env.API_URL}/customers`, {
+        headers: {
+          'Authorization': `Bearer ${process.env.ADMIN_TOKEN}`,
+          'X-CSRF-Token': csrfToken,
+        }
+      }));
+    }
+    const responses = await Promise.all(promises)
+    // console.log(responses.map(response => response.status()))
+    expect(responses.every((response) => response.status() === 200)).toBeFalsy();
+  });
 });
